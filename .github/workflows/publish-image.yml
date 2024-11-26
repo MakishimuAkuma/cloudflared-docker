@@ -1,0 +1,27 @@
+name: Publish cloudflared-docker to Docker HUB
+on:
+  push:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_SECRET }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/arm/v7,linux/arm64/v8,linux/amd64,linux/386,linux/s390x,linux/ppc64le,linux/riscv64
+          push: true
+          tags: ${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_IMAGE }}:latest
