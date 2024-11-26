@@ -7,6 +7,8 @@ RUN apk update && apk --no-cache --virtual build-dependendencies add build-base 
 # copy our sources into the builder image
 RUN git clone https://github.com/cloudflare/cloudflared.git .
 
+RUN sed -i '/else ifeq ($(LOCAL_ARCH),s390x)/s/^/else ifeq ($(LOCAL_ARCH),riscv64)\n	TARGET_ARCH ?= riscv64\n/' Makefile
+
 # compile cloudflared
 RUN make cloudflared -j$(nproc)
 
