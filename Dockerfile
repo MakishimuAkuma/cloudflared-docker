@@ -2,7 +2,7 @@ FROM alpine:latest AS builder
 
 WORKDIR /go/src/github.com/cloudflare/cloudflared/
 
-RUN apk update && apk add go git
+RUN apk update && apk add build-base go git bash
 
 # copy our sources into the builder image
 RUN git clone https://github.com/cloudflare/cloudflared.git .
