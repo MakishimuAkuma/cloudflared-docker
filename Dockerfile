@@ -10,7 +10,7 @@ RUN git clone https://github.com/cloudflare/cloudflared.git .
 RUN .teamcity/install-cloudflare-go.sh
 
 # compile cloudflared
-RUN PATH="/tmp/go/bin:$PATH" make cloudflared
+RUN PATH="/tmp/go/bin:$PATH" make cloudflared -j$(nproc)
 
 # use a distroless base image with glibc
 FROM alpine:latest
