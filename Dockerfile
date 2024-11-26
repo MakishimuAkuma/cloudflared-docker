@@ -1,10 +1,8 @@
-FROM golang:latest AS builder
-ENV GO111MODULE=on \
-    CGO_ENABLED=0 \
-    CONTAINER_BUILD=1
-
+FROM alpine:latest AS builder
 
 WORKDIR /go/src/github.com/cloudflare/cloudflared/
+
+RUN apk update && apk add go git
 
 # copy our sources into the builder image
 RUN git clone https://github.com/cloudflare/cloudflared.git .
