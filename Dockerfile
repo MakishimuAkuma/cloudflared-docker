@@ -4,20 +4,17 @@ ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     CONTAINER_BUILD=1
 
+WORKDIR /go/src/github.com/cloudflare/cloudflared/
+
 RUN apk update && apk --no-cache --virtual build-dependendencies add build-base go git bash
 
-RUN cd /tmp && git clone -q https://github.com/cloudflare/go \
-	&& cd go/src \
-	&& git checkout -q f4334cdc0c3f22a3bfdd7e66f387e3ffc65a5c38 \
-	&& ./make.bash
+RUN git clone https://github.com/cloudflare/cloudflared.git .
 
-RUN mkdir -p /go/src/github.com/cloudflare \
-	&& cd /go/src/github.com/cloudflare \
-	&& git clone https://github.com/cloudflare/cloudflared.git
+RUN .teamcity/install-cloudflare-go.sh
 
 RUN sed -i '/else ifeq ($(LOCAL_ARCH),s390x)/s/^/else ifeq ($(LOCAL_ARCH),riscv64)\n	TARGET_ARCH ?= riscv64\nelse ifeq ($(LOCAL_ARCH),ppc64le)\n	TARGET_ARCH ?= ppc64le\n/' /go/src/github.com/cloudflare/cloudflared/Makefile
 
-RUN /tmp/go/bin/go make cloudflared -j$(nproc)
+RUN PATH="/tmp/go/bin:$PATH" make cloudflared
 
 FROM alpine:latest
 
