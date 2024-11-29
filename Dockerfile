@@ -1,12 +1,7 @@
-ARG TARGET_GOOS
-ARG TARGET_GOARCH
-
 FROM alpine:latest AS builder
 
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
-    TARGET_GOOS=${TARGET_GOOS} \
-    TARGET_GOARCH=${TARGET_GOARCH} \
     CONTAINER_BUILD=1
 
 RUN apk update && apk --no-cache --virtual build-dependendencies add build-base go git bash
@@ -22,7 +17,7 @@ RUN mkdir -p /go/src/github.com/cloudflare \
 
 RUN sed -i '/else ifeq ($(LOCAL_ARCH),s390x)/s/^/else ifeq ($(LOCAL_ARCH),riscv64)\n	TARGET_ARCH ?= riscv64\nelse ifeq ($(LOCAL_ARCH),ppc64le)\n	TARGET_ARCH ?= ppc64le\n/' /go/src/github.com/cloudflare/cloudflared/Makefile
 
-RUN PATH="/tmp/go/bin:$PATH" make cloudflared -j$(nproc)
+RUN /tmp/go/bin/go make cloudflared -j$(nproc)
 
 FROM alpine:latest
 
