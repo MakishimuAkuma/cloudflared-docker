@@ -1,4 +1,4 @@
-FROM alpine:latest AS builder
+FROM --platform=$BUILDPLATFORM alpine:latest AS builder
 
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
@@ -16,9 +16,10 @@ RUN sed -i '/else ifeq ($(LOCAL_ARCH),s390x)/s/^/else ifeq ($(LOCAL_ARCH),riscv6
 
 RUN PATH="/tmp/go/bin:$PATH" make cloudflared
 
-FROM alpine:latest
+FROM --platform=$BUILDPLATFORM alpine:latest
 
 COPY --from=builder /go/src/github.com/cloudflare/cloudflared/cloudflared /usr/local/bin/
 
 ENTRYPOINT ["cloudflared", "--no-autoupdate"]
+
 CMD ["version"]
