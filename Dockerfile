@@ -8,7 +8,7 @@ WORKDIR /go/src/github.com/cloudflare/cloudflared/
 
 RUN apk update && apk --no-cache --virtual build-dependendencies add build-base go git bash
 
-RUN git clone https://github.com/cloudflare/cloudflared.git .
+RUN git clone --depth 1 --branch 2025.2.1 https://github.com/cloudflare/cloudflared.git .
 
 RUN .teamcity/install-cloudflare-go.sh
 
