@@ -8,7 +8,7 @@ WORKDIR /go/src/github.com/cloudflare/cloudflared/
 
 RUN apk update && apk --no-cache --virtual build-dependendencies add build-base go git bash
 
-RUN git clone --depth 1 --branch 2025.2.1 https://github.com/cloudflare/cloudflared.git .
+RUN git clone --depth 1 --branch 2025.4.0 https://github.com/cloudflare/cloudflared.git .
 
 RUN .teamcity/install-cloudflare-go.sh
 
@@ -16,7 +16,7 @@ RUN sed -i '/else ifeq ($(LOCAL_ARCH),s390x)/s/^/else ifeq ($(LOCAL_ARCH),riscv6
 
 RUN PATH="/tmp/go/bin:$PATH" make cloudflared
 
-FROM alpine:latest
+FROM busybox:latest
 
 COPY --from=builder /go/src/github.com/cloudflare/cloudflared/cloudflared /usr/local/bin/
 
