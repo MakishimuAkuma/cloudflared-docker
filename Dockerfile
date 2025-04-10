@@ -1,4 +1,4 @@
-FROM golang:alpine AS builder
+FROM golang:latest AS builder
 
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
@@ -6,9 +6,7 @@ ENV GO111MODULE=on \
 
 WORKDIR /go/src/cloudflared/
 
-RUN apk update && apk add git bash
-
-RUN git clone --depth 1 --branch 2025.4.0 https://github.com/cloudflare/cloudflared.git .
+ADD https://github.com/cloudflare/cloudflared.git#2025.4.0 .
 
 RUN .teamcity/install-cloudflare-go.sh
 
