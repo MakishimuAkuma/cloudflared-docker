@@ -6,6 +6,8 @@ ENV GO111MODULE=on \
 
 WORKDIR /go/src/cloudflared/
 
+RUN apk update && apk add git
+
 RUN git clone --depth 1 --branch 2025.4.0 https://github.com/cloudflare/cloudflared.git .
 
 RUN .teamcity/install-cloudflare-go.sh
