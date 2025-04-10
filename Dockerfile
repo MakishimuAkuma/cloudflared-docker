@@ -1,24 +1,22 @@
-FROM alpine:latest AS builder
+FROM golang:latest AS builder
 
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     CONTAINER_BUILD=1
 
-WORKDIR /go/src/github.com/cloudflare/cloudflared/
-
-RUN apk update && apk --no-cache --virtual build-dependendencies add build-base go git bash
+WORKDIR /go/src/cloudflared/
 
 RUN git clone --depth 1 --branch 2025.4.0 https://github.com/cloudflare/cloudflared.git .
 
 RUN .teamcity/install-cloudflare-go.sh
 
-RUN sed -i '/else ifeq ($(LOCAL_ARCH),s390x)/s/^/else ifeq ($(LOCAL_ARCH),riscv64)\n	TARGET_ARCH ?= riscv64\nelse ifeq ($(LOCAL_ARCH),ppc64le)\n	TARGET_ARCH ?= ppc64le\n/' /go/src/github.com/cloudflare/cloudflared/Makefile
+RUN sed -i '/else ifeq ($(LOCAL_ARCH),s390x)/s/^/else ifeq ($(LOCAL_ARCH),riscv64)\n	TARGET_ARCH ?= riscv64\nelse ifeq ($(LOCAL_ARCH),ppc64le)\n	TARGET_ARCH ?= ppc64le\n/' /go/src/cloudflared/Makefile
 
 RUN PATH="/tmp/go/bin:$PATH" make cloudflared
 
-FROM busybox:latest
+FROM busybox:stable-glibc
 
-COPY --from=builder /go/src/github.com/cloudflare/cloudflared/cloudflared /usr/local/bin/
+COPY --from=builder /go/src/cloudflared/cloudflared /usr/local/bin/
 
 ENTRYPOINT ["cloudflared", "--no-autoupdate"]
 
