@@ -1,1 +1,1 @@
-Cloudflare Tunnel client (2025.4.2)
+Cloudflare Tunnel client (2025.5.0)
