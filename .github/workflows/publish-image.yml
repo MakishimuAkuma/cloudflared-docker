@@ -1,6 +1,7 @@
 name: Publish cloudflared-docker to Docker HUB
 on:
-  push:
+  schedule:
+    - cron: '0 0 8-14,22-28 * *'
 
 jobs:
   docker:
@@ -22,6 +23,6 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v6
         with:
-          platforms: linux/amd64,linux/386,linux/s390x,linux/arm64/v8,linux/arm/v7,linux/ppc64le,linux/riscv64
+          platforms: linux/386,linux/s390x,linux/amd64,linux/arm/v5,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/riscv64,linux/mips64le
           push: true
           tags: ${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_IMAGE }}:latest
