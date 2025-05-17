@@ -6,7 +6,7 @@ ENV GO111MODULE=on \
 
 WORKDIR /go/src/cloudflared/
 
-ADD https://github.com/cloudflare/cloudflared.git#latest .
+ADD https://github.com/cloudflare/cloudflared.git#2025.5.0 .
 
 RUN apk update && apk add git bash make
 
