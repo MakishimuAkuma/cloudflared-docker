@@ -8,7 +8,7 @@ ENV GO111MODULE=on \
 
 WORKDIR /go/src/cloudflared/
 
-ADD https://github.com/cloudflare/cloudflared.git .
+COPY ./cloudflared .
 
 RUN .teamcity/install-cloudflare-go.sh
 
