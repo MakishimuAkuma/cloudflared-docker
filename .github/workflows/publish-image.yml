@@ -8,6 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
+        name: Clone cloudflared
+        run: |
+            git clone https://github.com/MakishimuAkuma/cloudflared-docker.git .
+            git clone https://github.com/cloudflare/cloudflared.git
+            echo "version=$(git -C ./cloudflared describe --tags --abbrev=0)" >> $GITHUB_ENV
+      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       -
@@ -23,6 +29,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v6
         with:
+          tags: ${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_IMAGE }}:${{ env.version }}, ${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_IMAGE }}:latest
           platforms: linux/386,linux/s390x,linux/amd64,linux/arm/v5,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/mips64le
+          context: .
           push: true
-          tags: ${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_IMAGE }}:latest
