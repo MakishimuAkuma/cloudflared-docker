@@ -1,7 +1,7 @@
 name: Publish cloudflared-docker to Docker HUB
 on:
   schedule:
-    - cron: '0 0 8-14,22-28 * *'
+    - cron: '0 0 * * 0'
 
 jobs:
   docker:
