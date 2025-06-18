@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM golang:latest AS builder
+FROM --platform=$BUILDPLATFORM docker.io/golang:latest AS builder
 
 ARG TARGETPLATFORM
 
@@ -25,7 +25,7 @@ RUN case "$TARGETPLATFORM" in \
         "linux/mips64le") GOOS=linux GOARCH=mips64le GOMIPS64LE=hardfloat PATH="/tmp/go/bin:$PATH" make cloudflared ;; \
     esac
 
-FROM busybox:latest
+FROM docker.io/busybox:latest
 
 COPY --from=builder /go/src/cloudflared/cloudflared /usr/local/bin/
 
