@@ -10,7 +10,7 @@ WORKDIR /go/src/cloudflared/
 
 COPY ./cloudflared .
 
-RUN .teamcity/install-cloudflare-go.sh
+RUN [ -f .teamcity/install-cloudflare-go.sh ] && .teamcity/install-cloudflare-go.sh
 
 RUN case "$TARGETPLATFORM" in \
         "linux/386") GOOS=linux GOARCH=386 PATH="/tmp/go/bin:$PATH" make cloudflared ;; \
@@ -27,7 +27,9 @@ RUN case "$TARGETPLATFORM" in \
 
 FROM docker.io/busybox:latest
 
-COPY --from=builder /go/src/cloudflared/cloudflared /usr/local/bin/
+COPY --from=builder --chown=nonroot /go/src/cloudflared/cloudflared /usr/local/bin/
+
+USER nonroot
 
 ENTRYPOINT ["cloudflared", "--no-autoupdate"]
 
