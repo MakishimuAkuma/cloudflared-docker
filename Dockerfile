@@ -10,7 +10,7 @@ WORKDIR /go/src/cloudflared/
 
 COPY ./cloudflared .
 
-RUN [ -f .teamcity/install-cloudflare-go.sh ] && .teamcity/install-cloudflare-go.sh
+RUN [ -f .teamcity/install-cloudflare-go.sh ] && .teamcity/install-cloudflare-go.sh || echo "Not file: install-cloudflare-go.sh"
 
 RUN case "$TARGETPLATFORM" in \
         "linux/386") GOOS=linux GOARCH=386 PATH="/tmp/go/bin:$PATH" make cloudflared ;; \
